@@ -1,9 +1,9 @@
-# base-repository
+# Minecart
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-This repository is a template (or "base") for Miners Online projects. In addition this repository.
+This repository is going to be a game engine made in Java. It proably won't be simple to use.
 
 ## Using this template
 
