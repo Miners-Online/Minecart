@@ -1,7 +1,19 @@
 package uk.minersonline.minecart.demo;
 
-public class Main {
+import uk.minersonline.minecart.engine.Application;
+import uk.minersonline.minecart.engine.window.Window;
+import uk.minersonline.minecart.engine.window.WindowProperties;
+
+import java.awt.*;
+
+public class Main extends Application {
 	public static void main(String[] args) {
-		System.out.println("Hello world!");
+		Main main = new Main();
+		main.run(new WindowProperties(300, 300, "Demo app"));
+	}
+
+	@Override
+	protected void loopEntry(Window window) {
+		window.clear(Color.CYAN);
 	}
 }

@@ -12,7 +12,7 @@ repositories {
 }
 
 
-if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+if (Os.isFamily(Os.FAMILY_UNIX)) {
     project.ext.lwjglNatives = "natives-linux"
     def osArch = System.getProperty("os.arch")
     if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
