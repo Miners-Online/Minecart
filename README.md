@@ -35,8 +35,8 @@ Thanks go to these wonderful people ([emoji key](https://allcontributors.org/doc
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://minersonline.uk/"><img src="https://avatars.githubusercontent.com/u/41990982?v=4?s=100" width="100px;" alt="Samuel Hulme"/><br /><sub><b>Samuel Hulme</b></sub></a><br /><a href="https://github.com/Miners-Online/base-repository/commits?author=ajh123" title="Documentation">📖</a> <a href="https://github.com/Miners-Online/base-repository/issues?q=author%3Aajh123" title="Bug reports">🐛</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://allcontributors.org"><img src="https://avatars.githubusercontent.com/u/46410174?v=4?s=100" width="100px;" alt="All Contributors"/><br /><sub><b>All Contributors</b></sub></a><br /><a href="https://github.com/Miners-Online/base-repository/commits?author=all-contributors" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://minersonline.uk/"><img src="https://avatars.githubusercontent.com/u/41990982?v=4?s=100" width="100px;" alt="Samuel Hulme"/><br /><sub><b>Samuel Hulme</b></sub></a><br /><a href="https://github.com/Miners-Online/Minecart/commits?author=ajh123" title="Documentation">📖</a> <a href="https://github.com/Miners-Online/Minecart/issues?q=author%3Aajh123" title="Bug reports">🐛</a> <a href="https://github.com/Miners-Online/Minecart/commits?author=ajh123" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://allcontributors.org"><img src="https://avatars.githubusercontent.com/u/46410174?v=4?s=100" width="100px;" alt="All Contributors"/><br /><sub><b>All Contributors</b></sub></a><br /><a href="https://github.com/Miners-Online/Minecart/commits?author=all-contributors" title="Documentation">📖</a></td>
     </tr>
   </tbody>
   <tfoot>
