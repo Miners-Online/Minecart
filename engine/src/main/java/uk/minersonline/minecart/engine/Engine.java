@@ -7,9 +7,8 @@ import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
-public abstract class Application {
+public class Engine {
 	private Window window;
 
 	public void run(WindowProperties properties) {
@@ -39,10 +38,7 @@ public abstract class Application {
 	private void loop() {
 		GL.createCapabilities();
 		while (!window.shouldClose()) {
-			this.loopEntry(window);
 			window.loop();
 		}
 	}
-
-	protected abstract void loopEntry(Window window);
 }
