@@ -2,24 +2,28 @@ package uk.minersonline.minecart.engine.window;
 
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+import uk.minersonline.minecart.engine.utils.Destroyable;
 
 import java.awt.*;
 import java.nio.IntBuffer;
+import java.util.concurrent.Callable;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class Window {
+public class Window implements Destroyable {
 	private final long handle;
 
 	private final WindowProperties properties;
+	private final Callable<Void> resizeFunc;
 
-	private Window(long handle, WindowProperties properties) {
+	private Window(long handle, WindowProperties properties, Callable<Void> resizeFunc) {
+		this.resizeFunc = resizeFunc;
 		this.handle = handle;
 		this.properties = properties;
 	}
@@ -36,18 +40,30 @@ public class Window {
 		return glfwWindowShouldClose(handle);
 	}
 
-	public void loop() {
+	public void update() {
 		glfwSwapBuffers(handle);
+	}
+
+	public boolean isKeyPressed(int keyCode) {
+		return glfwGetKey(handle, keyCode) == GLFW_PRESS;
+	}
+
+	public void keyCallBack(int key, int action) {
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+			glfwSetWindowShouldClose(handle, true); // We will detect this in the rendering loop
+		}
+	}
+
+	public void pollEvents() {
 		glfwPollEvents();
 	}
 
-	public void clear(Color color) {
+	public void setClearColor(Color color) {
 		float r=(1.0f/255)*color.getRed();
 		float g=(1.0f/255)*color.getGreen();
 		float b=(1.0f/255)*color.getBlue();
 		float a=(1.0f/255)*color.getAlpha();
 		glClearColor(r, g, b, a);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	public void center() {
@@ -57,42 +73,90 @@ public class Window {
 
 			glfwGetWindowSize(this.handle, pWidth, pHeight);
 
-			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			GLFWVidMode vidMode= glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 			glfwSetWindowPos(
 					this.handle,
-					(vidmode.width() - pWidth.get(0)) / 2,
-					(vidmode.height() - pHeight.get(0)) / 2
+					(vidMode.width() - pWidth.get(0)) / 2,
+					(vidMode.height() - pHeight.get(0)) / 2
 			);
 		}
 	}
 
-	public void makeCurrent() {
-		glfwMakeContextCurrent(handle);
-		glfwSwapInterval(1);
-		glfwShowWindow(handle);
-	}
-
+	@Override
 	public void destroy() {
 		glfwFreeCallbacks(this.handle);
 		glfwDestroyWindow(this.handle);
 	}
 
-	public static Window buildWindow(WindowProperties properties) {
-		glfwDefaultWindowHints();
-		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+	protected void resized(int width, int height) {
+		this.properties.width = width;
+		this.properties.height = height;
+		try {
+			resizeFunc.call();
+		} catch (Exception excp) {
+			System.err.printf("Error calling resize callback %s", excp);
+		}
+	}
 
-		long handle = glfwCreateWindow(properties.getWidth(), properties.getHeight(), properties.getTitle(), NULL, NULL);
-		if (handle == NULL) {
-			throw new RuntimeException("Failed to create the GLFW window");
+	public static Window buildWindow(WindowProperties properties, Callable<Void> resizeFunc) {
+		if (!glfwInit()) {
+			throw new IllegalStateException("Unable to initialize GLFW");
 		}
 
-		glfwSetKeyCallback(handle, (_w, key, scancode, action, mods) -> {
-			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-				glfwSetWindowShouldClose(handle, true);
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		if (properties.compatibleProfile) {
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+		} else {
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		}
+
+		if (!(properties.width > 0 && properties.height > 0)) {
+			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+			GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			properties.width = vidMode.width();
+			properties.height = vidMode.height();
+		}
+
+		long windowHandle = glfwCreateWindow(properties.width, properties.height, properties.title, NULL, NULL);
+		if (windowHandle == NULL) {
+			throw new RuntimeException("Failed to create the GLFW window");
+		}
+		Window window = new Window(windowHandle, properties, resizeFunc);
+
+		glfwSetFramebufferSizeCallback(windowHandle, (_w, w, h) -> window.resized(w, h));
+
+		glfwSetErrorCallback((int errorCode, long msgPtr) ->
+				System.err.printf("Error code [%s], msg [%s]%n", errorCode, MemoryUtil.memUTF8(msgPtr))
+		);
+
+		glfwSetKeyCallback(windowHandle, (_w, key, scancode, action, mods) -> {
+			window.keyCallBack(key, action);
 		});
 
-		return new Window(handle, properties);
+		glfwMakeContextCurrent(windowHandle);
+
+		if (properties.vsync) {
+			if (properties.fps > 0) {
+				glfwSwapInterval(0);
+			} else {
+				glfwSwapInterval(1);
+			}
+		}
+
+		glfwShowWindow(windowHandle);
+
+		int[] arrWidth = new int[1];
+		int[] arrHeight = new int[1];
+		glfwGetFramebufferSize(windowHandle, arrWidth, arrHeight);
+		properties.width = arrWidth[0];
+		properties.height = arrHeight[0];
+		return window;
 	}
 }

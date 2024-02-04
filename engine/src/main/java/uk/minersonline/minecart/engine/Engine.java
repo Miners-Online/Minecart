@@ -3,42 +3,93 @@ package uk.minersonline.minecart.engine;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+import uk.minersonline.minecart.engine.scene.Scene;
+import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
+import uk.minersonline.minecart.engine.window.render.Render;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Engine {
-	private Window window;
+public class Engine implements Destroyable {
+	public static final int TARGET_UPS = 30;
+	private final Application application;
+	private final Window window;
+	private Render render;
+	private boolean running;
+	private Scene scene;
+	private int targetFps;
+	private int targetUps;
 
-	public void run(WindowProperties properties) {
-		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
+	public Engine(WindowProperties properties, Application application) {
+		window = Window.buildWindow(properties, () -> {
+			resize();
+			return null;
+		});
+		targetFps = properties.fps;
+		targetUps = properties.ups;
+		this.application = application;
+		render = new Render();
+		scene = new Scene();
+		application.init(window, scene, render);
+		running = true;
+	}
 
-		init(properties);
-		loop();
-
+	@Override
+	public void destroy() {
+		application.destroy();
+		render.destroy();
+		scene.destroy();
 		window.destroy();
-
-		glfwTerminate();
-		glfwSetErrorCallback(null).free();
 	}
 
-	private void init(WindowProperties properties) {
-		GLFWErrorCallback.createPrint(System.err).set();
-
-		if (!glfwInit()) {
-			throw new IllegalStateException("Unable to initialize GLFW");
-		}
-
-		window = Window.buildWindow(properties);
-		window.center();
-		window.makeCurrent();
+	private void resize() {
+		// Nothing to be done yet
 	}
 
-	private void loop() {
-		GL.createCapabilities();
-		while (!window.shouldClose()) {
-			window.loop();
+	private void run() {
+		long initialTime = System.currentTimeMillis();
+		float timeU = 1000.0f / targetUps;
+		float timeR = targetFps > 0 ? 1000.0f / targetFps : 0;
+		float deltaUpdate = 0;
+		float deltaFps = 0;
+
+		long updateTime = initialTime;
+		while (running && !window.shouldClose()) {
+			window.pollEvents();
+
+			long now = System.currentTimeMillis();
+			deltaUpdate += (now - initialTime) / timeU;
+			deltaFps += (now - initialTime) / timeR;
+
+			if (targetFps <= 0 || deltaFps >= 1) {
+				application.input(window, scene, now - initialTime);
+			}
+
+			if (deltaUpdate >= 1) {
+				long diffTimeMillis = now - updateTime;
+				application.update(window, scene, diffTimeMillis);
+				updateTime = now;
+				deltaUpdate--;
+			}
+
+			if (targetFps <= 0 || deltaFps >= 1) {
+				render.render(window, scene);
+				deltaFps--;
+				window.update();
+			}
+			initialTime = now;
 		}
+
+		destroy();
+	}
+
+	public void start() {
+		running = true;
+		run();
+	}
+
+	public void stop() {
+		running = false;
 	}
 }
