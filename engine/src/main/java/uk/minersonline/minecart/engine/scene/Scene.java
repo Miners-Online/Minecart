@@ -2,6 +2,7 @@ package uk.minersonline.minecart.engine.scene;
 
 
 import uk.minersonline.minecart.engine.render.objects.TextureCache;
+import uk.minersonline.minecart.engine.scene.objects.Camera;
 import uk.minersonline.minecart.engine.scene.objects.Entity;
 import uk.minersonline.minecart.engine.scene.objects.Model;
 import uk.minersonline.minecart.engine.utils.Destroyable;
@@ -14,11 +15,13 @@ public class Scene implements Destroyable {
 	private final Map<String, Model> modelMap;
 	private final Projection3D projection;
 	private final TextureCache cache;
+	private final Camera camera;
 
 	public Scene(int width, int height) {
 		modelMap = new HashMap<>();
 		projection = new Projection3D(width, height);
 		cache = new TextureCache();
+		camera = new Camera();
 	}
 
 	public void addEntity(Entity entity) {
@@ -49,6 +52,10 @@ public class Scene implements Destroyable {
 
 	public TextureCache getCache() {
 		return cache;
+	}
+
+	public Camera getCamera() {
+		return camera;
 	}
 
 	public void resize(int width, int height) {

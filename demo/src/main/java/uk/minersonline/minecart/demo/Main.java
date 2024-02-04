@@ -1,5 +1,6 @@
 package uk.minersonline.minecart.demo;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import uk.minersonline.minecart.engine.Application;
@@ -7,6 +8,7 @@ import uk.minersonline.minecart.engine.Engine;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.scene.EntityRenderer;
 import uk.minersonline.minecart.engine.scene.Scene;
+import uk.minersonline.minecart.engine.scene.objects.Camera;
 import uk.minersonline.minecart.engine.scene.objects.Entity;
 import uk.minersonline.minecart.engine.render.objects.Mesh;
 import uk.minersonline.minecart.engine.scene.objects.Material;
@@ -14,6 +16,7 @@ import uk.minersonline.minecart.engine.scene.objects.Model;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
 import uk.minersonline.minecart.engine.render.MainRenderer;
+import uk.minersonline.minecart.engine.window.input.MouseInput;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -23,8 +26,10 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements Application {
 	private Entity cubeEntity;
-	private final Vector4f displacement = new Vector4f();
 	private float rotation;
+
+	private static final float MOUSE_SENSITIVITY = 0.2f;
+	private static final float MOVEMENT_SPEED = 0.005f;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -154,35 +159,31 @@ public class Main implements Application {
 	}
 
 	@Override
-	public void input(Window window, Scene scene, long diffTimeMillis) {
-		displacement.zero();
-		if (window.isKeyPressed(GLFW_KEY_UP)) {
-			displacement.y = 1;
-		} else if (window.isKeyPressed(GLFW_KEY_DOWN)) {
-			displacement.y = -1;
-		}
-		if (window.isKeyPressed(GLFW_KEY_LEFT)) {
-			displacement.x = -1;
-		} else if (window.isKeyPressed(GLFW_KEY_RIGHT)) {
-			displacement.x = 1;
+	public void input(Window window, Scene scene, long deltaTime) {
+		float move = deltaTime * MOVEMENT_SPEED;
+		Camera camera = scene.getCamera();
+		if (window.isKeyPressed(GLFW_KEY_W)) {
+			camera.moveForward(move);
+		} else if (window.isKeyPressed(GLFW_KEY_S)) {
+			camera.moveBackwards(move);
 		}
 		if (window.isKeyPressed(GLFW_KEY_A)) {
-			displacement.z = -1;
-		} else if (window.isKeyPressed(GLFW_KEY_Q)) {
-			displacement.z = 1;
+			camera.moveLeft(move);
+		} else if (window.isKeyPressed(GLFW_KEY_D)) {
+			camera.moveRight(move);
 		}
-		if (window.isKeyPressed(GLFW_KEY_Z)) {
-			displacement.w = -1;
-		} else if (window.isKeyPressed(GLFW_KEY_X)) {
-			displacement.w = 1;
+		if (window.isKeyPressed(GLFW_KEY_SPACE)) {
+			camera.moveUp(move);
+		} else if (window.isKeyPressed(GLFW_KEY_LEFT_SHIFT)) {
+			camera.moveDown(move);
 		}
 
-		displacement.mul(diffTimeMillis / 1000.0f);
-
-		Vector3f entityPos = cubeEntity.getPosition();
-		cubeEntity.setPosition(displacement.x + entityPos.x, displacement.y + entityPos.y, displacement.z + entityPos.z);
-		cubeEntity.setScale(cubeEntity.getScale() + displacement.w);
-		cubeEntity.updateModelMatrix();
+		MouseInput mouseInput = window.getMouseInput();
+		if (mouseInput.isRightButtonPressed()) {
+			Vector2f mouseDisplacement = mouseInput.getDisplacement();
+			camera.addRotation((float) Math.toRadians(-mouseDisplacement.x * MOUSE_SENSITIVITY),
+					(float) Math.toRadians(-mouseDisplacement.y * MOUSE_SENSITIVITY));
+		}
 	}
 
 	@Override

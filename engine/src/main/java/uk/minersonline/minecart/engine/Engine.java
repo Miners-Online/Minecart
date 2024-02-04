@@ -59,6 +59,7 @@ public class Engine implements Destroyable {
 			deltaFps += (now - initialTime) / timeR;
 
 			if (targetFps <= 0 || deltaFps >= 1) {
+				window.getMouseInput().input();
 				application.input(window, scene, now - initialTime);
 			}
 

@@ -28,6 +28,7 @@ public class EntityRenderer implements Renderer {
 		uniforms.createUniform("projectionMatrix");
 		uniforms.createUniform("modelMatrix");
 		uniforms.createUniform("txtSampler");
+		uniforms.createUniform("viewMatrix");
 	}
 
 	@Override
@@ -40,8 +41,8 @@ public class EntityRenderer implements Renderer {
 		shaderProgram.bind();
 
 		uniforms.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
-
 		uniforms.setUniform("txtSampler", 0);
+		uniforms.setUniform("viewMatrix", scene.getCamera().getViewMatrix());
 
 		Collection<Model> models = scene.getModelMap().values();
 		TextureCache textureCache = scene.getCache();

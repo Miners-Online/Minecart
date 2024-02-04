@@ -6,6 +6,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import uk.minersonline.minecart.engine.utils.ColorUtils;
 import uk.minersonline.minecart.engine.utils.Destroyable;
+import uk.minersonline.minecart.engine.window.input.MouseInput;
 
 import java.awt.*;
 import java.nio.IntBuffer;
@@ -23,19 +24,21 @@ public class Window implements Destroyable {
 
 	private final WindowProperties properties;
 	private final Callable<Void> resizeFunc;
+	private final MouseInput mouseInput;
 
 	private Window(long handle, WindowProperties properties, Callable<Void> resizeFunc) {
 		this.resizeFunc = resizeFunc;
 		this.handle = handle;
 		this.properties = properties;
-	}
-
-	public long getHandle() {
-		return handle;
+		this.mouseInput = new MouseInput(handle);
 	}
 
 	public WindowProperties getProperties() {
 		return properties;
+	}
+
+	public MouseInput getMouseInput() {
+		return mouseInput;
 	}
 
 	public boolean shouldClose() {
