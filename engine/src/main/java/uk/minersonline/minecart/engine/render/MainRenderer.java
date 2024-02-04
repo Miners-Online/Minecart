@@ -11,12 +11,11 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class MainRenderer implements Destroyable {
+public class MainRenderer implements Destroyable, Resizeable {
 	private final List<Renderer> renderers = new ArrayList<>();
 
 	public MainRenderer() {
 		GL.createCapabilities();
-		glEnable(GL_DEPTH_TEST);
 	}
 
 	public void addRenderer(Renderer renderer) {
@@ -33,5 +32,14 @@ public class MainRenderer implements Destroyable {
 		WindowProperties properties = window.getProperties();
 		glViewport(0, 0, properties.width, properties.height);
 		renderers.forEach((renderer) -> renderer.render(scene));
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		for (Renderer renderer : renderers) {
+			if (renderer instanceof Resizeable resizeable) {
+				resizeable.resize(width, height);
+			}
+		}
 	}
 }

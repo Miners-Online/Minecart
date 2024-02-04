@@ -1,10 +1,15 @@
 package uk.minersonline.minecart.demo;
 
+import imgui.ImGui;
+import imgui.ImGuiIO;
+import imgui.flag.ImGuiCond;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
+import uk.minersonline.minecart.engine.gui.GuiInstance;
+import uk.minersonline.minecart.engine.gui.GuiRenderer;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.scene.EntityRenderer;
 import uk.minersonline.minecart.engine.scene.Scene;
@@ -24,7 +29,7 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Main implements Application {
+public class Main implements Application, GuiInstance {
 	private Entity cubeEntity;
 	private float rotation;
 
@@ -156,10 +161,16 @@ public class Main implements Application {
 		scene.addEntity(cubeEntity);
 
 		renderer.addRenderer(new EntityRenderer());
+		renderer.addRenderer(new GuiRenderer(window));
+		scene.setGuiInstance(this);
 	}
 
 	@Override
-	public void input(Window window, Scene scene, long deltaTime) {
+	public void input(Window window, Scene scene, long deltaTime, boolean inputConsumed) {
+		if (inputConsumed) {
+			return;
+		}
+
 		float move = deltaTime * MOVEMENT_SPEED;
 		Camera camera = scene.getCamera();
 		if (window.isKeyPressed(GLFW_KEY_W)) {
@@ -199,5 +210,26 @@ public class Main implements Application {
 	@Override
 	public void destroy() {
 
+	}
+
+	@Override
+	public void drawGui() {
+		ImGui.newFrame();
+		ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
+		ImGui.showDemoWindow();
+		ImGui.endFrame();
+		ImGui.render();
+	}
+
+	@Override
+	public boolean handleGuiInput(Scene scene, Window window) {
+		ImGuiIO imGuiIO = ImGui.getIO();
+		MouseInput mouseInput = window.getMouseInput();
+		Vector2f mousePos = mouseInput.getCurrentPos();
+		imGuiIO.setMousePos(mousePos.x, mousePos.y);
+		imGuiIO.setMouseDown(0, mouseInput.isLeftButtonPressed());
+		imGuiIO.setMouseDown(1, mouseInput.isRightButtonPressed());
+
+		return imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
 	}
 }

@@ -1,6 +1,8 @@
 package uk.minersonline.minecart.engine.scene;
 
 
+import uk.minersonline.minecart.engine.gui.GuiInstance;
+import uk.minersonline.minecart.engine.render.Resizeable;
 import uk.minersonline.minecart.engine.render.objects.TextureCache;
 import uk.minersonline.minecart.engine.scene.objects.Camera;
 import uk.minersonline.minecart.engine.scene.objects.Entity;
@@ -10,12 +12,14 @@ import uk.minersonline.minecart.engine.utils.Destroyable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Scene implements Destroyable {
+public class Scene implements Destroyable, Resizeable {
 
 	private final Map<String, Model> modelMap;
 	private final Projection3D projection;
 	private final TextureCache cache;
 	private final Camera camera;
+
+	private GuiInstance guiInstance;
 
 	public Scene(int width, int height) {
 		modelMap = new HashMap<>();
@@ -58,6 +62,15 @@ public class Scene implements Destroyable {
 		return camera;
 	}
 
+	public GuiInstance getGuiInstance() {
+		return guiInstance;
+	}
+
+	public void setGuiInstance(GuiInstance guiInstance) {
+		this.guiInstance = guiInstance;
+	}
+
+	@Override
 	public void resize(int width, int height) {
 		projection.updateProjMatrix(width, height);
 	}

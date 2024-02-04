@@ -38,6 +38,8 @@ public class EntityRenderer implements Renderer {
 
 	@Override
 	public void render(Scene scene) {
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_CULL_FACE);
 		shaderProgram.bind();
 
 		uniforms.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());

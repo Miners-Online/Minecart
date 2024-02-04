@@ -161,4 +161,8 @@ public class Window implements Destroyable {
 		properties.height = arrHeight[0];
 		return window;
 	}
+
+	public long getWindowHandle() {
+		return handle;
+	}
 }

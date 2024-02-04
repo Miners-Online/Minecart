@@ -8,7 +8,7 @@ import uk.minersonline.minecart.engine.render.MainRenderer;
 public interface Application extends Destroyable {
 	void init(Window window, Scene scene, MainRenderer render);
 
-	void input(Window window, Scene scene, long deltaTime);
+	void input(Window window, Scene scene, long deltaTime, boolean inputConsumed);
 
 	void update(Window window, Scene scene, long deltaTime);
 }

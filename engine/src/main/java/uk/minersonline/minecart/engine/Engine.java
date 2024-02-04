@@ -1,5 +1,6 @@
 package uk.minersonline.minecart.engine;
 
+import uk.minersonline.minecart.engine.gui.GuiInstance;
 import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
@@ -41,9 +42,11 @@ public class Engine implements Destroyable {
 	private void resize() {
 		WindowProperties properties = window.getProperties();
 		scene.resize(properties.width, properties.height);
+		render.resize(properties.width, properties.height);
 	}
 
 	private void run() {
+		GuiInstance guiInstance = scene.getGuiInstance();
 		long initialTime = System.currentTimeMillis();
 		float timeU = 1000.0f / targetUps;
 		float timeR = targetFps > 0 ? 1000.0f / targetFps : 0;
@@ -60,7 +63,8 @@ public class Engine implements Destroyable {
 
 			if (targetFps <= 0 || deltaFps >= 1) {
 				window.getMouseInput().input();
-				application.input(window, scene, now - initialTime);
+				boolean inputConsumed = guiInstance != null && guiInstance.handleGuiInput(scene, window);
+				application.input(window, scene, now - initialTime, inputConsumed);
 			}
 
 			if (deltaUpdate >= 1) {
