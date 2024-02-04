@@ -25,7 +25,7 @@ public class Engine implements Destroyable {
 		targetUps = properties.ups;
 		this.application = application;
 		render = new Render();
-		scene = new Scene();
+		scene = new Scene(properties.width, properties.height);
 		application.init(window, scene, render);
 		running = true;
 	}
@@ -39,7 +39,8 @@ public class Engine implements Destroyable {
 	}
 
 	private void resize() {
-		// Nothing to be done yet
+		WindowProperties properties = window.getProperties();
+		scene.resize(properties.width, properties.height);
 	}
 
 	private void run() {
@@ -62,8 +63,8 @@ public class Engine implements Destroyable {
 			}
 
 			if (deltaUpdate >= 1) {
-				long diffTimeMillis = now - updateTime;
-				application.update(window, scene, diffTimeMillis);
+				long deltaTime = now - updateTime;
+				application.update(window, scene, deltaTime);
 				updateTime = now;
 				deltaUpdate--;
 			}
