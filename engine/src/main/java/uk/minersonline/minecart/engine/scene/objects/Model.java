@@ -7,17 +7,17 @@ import java.util.*;
 public class Model implements Destroyable {
 	private final String id;
 	private final List<Entity> entitiesList;
-	private final List<Mesh> meshList;
+	private final List<Material> materialList;
 
-	public Model(String id, List<Mesh> meshList) {
+	public Model(String id, List<Material> materialList) {
 		this.id = id;
-		this.meshList = meshList;
+		this.materialList = materialList;
 		entitiesList = new ArrayList<>();
 	}
 
 	@Override
 	public void destroy() {
-		meshList.forEach(Mesh::destroy);
+		materialList.forEach(Material::destroy);
 	}
 
 	public List<Entity> getEntitiesList() {
@@ -28,7 +28,7 @@ public class Model implements Destroyable {
 		return id;
 	}
 
-	public List<Mesh> getMeshList() {
-		return meshList;
+	public List<Material> getMaterialList() {
+		return materialList;
 	}
 }
