@@ -1,8 +1,8 @@
 package uk.minersonline.minecart.engine.window;
 
 public class WindowProperties {
-	private final int width;
-	private final int height;
+	private int width;
+	private int height;
 	private final String title;
 
 	public WindowProperties(int width, int height, String title) {
@@ -21,5 +21,13 @@ public class WindowProperties {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }
