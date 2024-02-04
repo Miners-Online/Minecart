@@ -3,21 +3,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-This repository is going to be a game engine made in Java. It proably won't be simple to use.
-
-## Using this template
-
-1. Click the green "Use this template" button near the top right and select "Create a new repository".
-
-2. Configure the repository details to your liking.
-
-3. Once the repository is created, make sure you have cloned the repository (with Git), you must update the [./.all-contributorsrc](./.all-contributorsrc) file. Replace `"base-repository"` with the name of your repository and replace `"Miners-Online"` with the owner of the repository.
-
-4. Reset the `"contributors"` list to `"contributors": [],` inside the [./.all-contributorsrc](./.all-contributorsrc) file.
-
-5. Install the [AllContributors GitHub App](https://allcontributors.org/docs/en/bot/installation) and the [CLI](https://allcontributors.org/docs/en/cli/installation). Regenerate the README with `npx all-contributors generate` or `yarn all-contributors generate`.
-
-6. Remove this "Using this template" section and update what is left.
+This repository is going to be a game engine made in Java. It probably won't be simple to use.
 
 ## License
 

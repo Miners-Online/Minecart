@@ -20,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements Application {
 	private Entity cubeEntity;
-	private Vector4f displInc = new Vector4f();
+	private final Vector4f displInc = new Vector4f();
 	private float rotation;
 
 	public static void main(String[] args) {

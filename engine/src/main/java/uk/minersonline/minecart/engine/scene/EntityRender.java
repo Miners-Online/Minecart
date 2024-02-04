@@ -11,15 +11,14 @@ import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
-public class SceneRender implements Destroyable {
-
+public class EntityRender implements Destroyable {
 	private final Shader shaderProgram;
 	private final UniformsMap uniforms;
 
-	public SceneRender() {
+	public EntityRender() {
 		List<Shader.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/scene.vert", GL_VERTEX_SHADER, true));
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/scene.frag", GL_FRAGMENT_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity.vert", GL_VERTEX_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity.frag", GL_FRAGMENT_SHADER, true));
 		shaderProgram = new Shader(shaderModuleDataList);
 		uniforms = new UniformsMap(shaderProgram.getProgramId());
 		uniforms.createUniform("projectionMatrix");

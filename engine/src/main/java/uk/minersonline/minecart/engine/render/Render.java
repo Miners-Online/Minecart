@@ -2,7 +2,7 @@ package uk.minersonline.minecart.engine.render;
 
 import org.lwjgl.opengl.GL;
 import uk.minersonline.minecart.engine.scene.Scene;
-import uk.minersonline.minecart.engine.scene.SceneRender;
+import uk.minersonline.minecart.engine.scene.EntityRender;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
@@ -10,12 +10,12 @@ import uk.minersonline.minecart.engine.window.WindowProperties;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Render implements Destroyable {
-	private final SceneRender sceneRender;
+	private final EntityRender sceneRender;
 
 	public Render() {
 		GL.createCapabilities();
 		glEnable(GL_DEPTH_TEST);
-		sceneRender = new SceneRender();
+		sceneRender = new EntityRender();
 	}
 
 	@Override
