@@ -1,8 +1,10 @@
 package uk.minersonline.minecart.engine.window;
 
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import uk.minersonline.minecart.engine.utils.ColorUtils;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 
 import java.awt.*;
@@ -59,11 +61,8 @@ public class Window implements Destroyable {
 	}
 
 	public void setClearColor(Color color) {
-		float r=(1.0f/255)*color.getRed();
-		float g=(1.0f/255)*color.getGreen();
-		float b=(1.0f/255)*color.getBlue();
-		float a=(1.0f/255)*color.getAlpha();
-		glClearColor(r, g, b, a);
+		Vector4f GLColor = ColorUtils.colorToOpenGL(color);
+		glClearColor(GLColor.x, GLColor.y, GLColor.z, GLColor.w);
 	}
 
 	public void center() {
