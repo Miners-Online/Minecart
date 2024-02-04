@@ -3,9 +3,10 @@ package uk.minersonline.minecart.demo;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
 import uk.minersonline.minecart.engine.scene.Scene;
+import uk.minersonline.minecart.engine.scene.objects.Mesh;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
-import uk.minersonline.minecart.engine.window.render.Render;
+import uk.minersonline.minecart.engine.render.Render;
 
 import java.awt.*;
 
@@ -24,6 +25,14 @@ public class Main implements Application {
 	public void init(Window window, Scene scene, Render render) {
 		window.setClearColor(Color.CYAN);
 		window.center();
+
+		float[] positions = new float[]{
+				0.0f, 0.5f, 0.0f,
+				-0.5f, -0.5f, 0.0f,
+				0.5f, -0.5f, 0.0f
+		};
+		Mesh mesh = new Mesh(positions, 3);
+		scene.addMesh("triangle", mesh);
 	}
 
 	@Override

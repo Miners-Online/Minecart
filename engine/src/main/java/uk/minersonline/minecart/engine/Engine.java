@@ -1,15 +1,10 @@
 package uk.minersonline.minecart.engine;
 
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
-import uk.minersonline.minecart.engine.window.render.Render;
-
-import static org.lwjgl.glfw.GLFW.*;
+import uk.minersonline.minecart.engine.render.Render;
 
 public class Engine implements Destroyable {
 	public static final int TARGET_UPS = 30;
