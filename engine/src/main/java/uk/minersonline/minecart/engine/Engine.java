@@ -4,13 +4,13 @@ import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
-import uk.minersonline.minecart.engine.render.Render;
+import uk.minersonline.minecart.engine.render.MainRenderer;
 
 public class Engine implements Destroyable {
 	public static final int TARGET_UPS = 30;
 	private final Application application;
 	private final Window window;
-	private Render render;
+	private MainRenderer render;
 	private boolean running;
 	private Scene scene;
 	private int targetFps;
@@ -24,7 +24,7 @@ public class Engine implements Destroyable {
 		targetFps = properties.fps;
 		targetUps = properties.ups;
 		this.application = application;
-		render = new Render();
+		render = new MainRenderer();
 		scene = new Scene(properties.width, properties.height);
 		application.init(window, scene, render);
 		running = true;

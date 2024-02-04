@@ -6,16 +6,17 @@ import uk.minersonline.minecart.engine.render.UniformsMap;
 import uk.minersonline.minecart.engine.scene.objects.Entity;
 import uk.minersonline.minecart.engine.scene.objects.Model;
 import uk.minersonline.minecart.engine.utils.Destroyable;
+import uk.minersonline.minecart.engine.render.Renderer;
 
 import java.util.*;
 
 import static org.lwjgl.opengl.GL30.*;
 
-public class EntityRender implements Destroyable {
+public class EntityRenderer implements Renderer {
 	private final Shader shaderProgram;
 	private final UniformsMap uniforms;
 
-	public EntityRender() {
+	public EntityRenderer() {
 		List<Shader.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
 		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity.vert", GL_VERTEX_SHADER, true));
 		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity.frag", GL_FRAGMENT_SHADER, true));
@@ -30,6 +31,7 @@ public class EntityRender implements Destroyable {
 		shaderProgram.destroy();
 	}
 
+	@Override
 	public void render(Scene scene) {
 		shaderProgram.bind();
 		uniforms.setUniform("projectionMatrix", scene.getProjection().getProjMatrix());
