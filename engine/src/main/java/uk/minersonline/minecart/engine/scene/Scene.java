@@ -5,6 +5,7 @@ import dev.dominion.ecs.api.Dominion;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
 import uk.minersonline.minecart.engine.render.Resizeable;
 import uk.minersonline.minecart.engine.render.objects.TextureCache;
+import uk.minersonline.minecart.engine.scene.components.TransformComponent;
 import uk.minersonline.minecart.engine.scene.objects.Camera;
 import uk.minersonline.minecart.engine.scene.objects.Model;
 import uk.minersonline.minecart.engine.utils.Destroyable;

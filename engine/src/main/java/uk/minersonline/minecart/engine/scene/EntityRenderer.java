@@ -55,17 +55,7 @@ public class EntityRenderer implements Renderer {
 					String modelId = result.comp1().getModelId();
 					TransformComponent position = result.comp2();
 					if (modelId.equals(model.getId())) {
-						for (Material material : model.getMaterialList()) {
-							Texture texture = textureCache.getTexture(material.getTexturePath());
-							glActiveTexture(GL_TEXTURE0);
-							texture.bind();
-
-							for (Mesh mesh : material.getMeshList()) {
-								glBindVertexArray(mesh.getVaoId());
-								uniforms.setUniform("modelMatrix", position.getModelMatrix());
-								glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
-							}
-						}
+						processEntity(model, position, textureCache);
 					}
 				}
 			);
@@ -74,5 +64,19 @@ public class EntityRenderer implements Renderer {
 		glBindVertexArray(0);
 
 		shaderProgram.unbind();
+	}
+
+	private void processEntity(Model model, TransformComponent position, TextureCache textureCache) {
+		for (Material material : model.getMaterialList()) {
+			Texture texture = textureCache.getTexture(material.getTexturePath());
+			glActiveTexture(GL_TEXTURE0);
+			texture.bind();
+
+			for (Mesh mesh : material.getMeshList()) {
+				glBindVertexArray(mesh.getVaoId());
+				uniforms.setUniform("modelMatrix", position.getModelMatrix());
+				glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+			}
+		}
 	}
 }

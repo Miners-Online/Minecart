@@ -193,8 +193,10 @@ public class Main implements Application, GuiInstance {
 		MouseInput mouseInput = window.getMouseInput();
 		if (mouseInput.isRightButtonPressed()) {
 			Vector2f mouseDisplacement = mouseInput.getDisplacement();
-			camera.addRotation((float) Math.toRadians(-mouseDisplacement.x * MOUSE_SENSITIVITY),
-					(float) Math.toRadians(-mouseDisplacement.y * MOUSE_SENSITIVITY));
+			camera.addRotation(
+				(float) Math.toRadians(-mouseDisplacement.x * MOUSE_SENSITIVITY),
+				(float) Math.toRadians(-mouseDisplacement.y * MOUSE_SENSITIVITY)
+			);
 		}
 	}
 
