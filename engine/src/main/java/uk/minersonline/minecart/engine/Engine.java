@@ -40,9 +40,8 @@ public class Engine implements Destroyable {
 	}
 
 	private void resize() {
-		WindowProperties properties = window.getProperties();
-		scene.resize(properties.width, properties.height);
-		render.resize(properties.width, properties.height);
+		scene.resize(window.getWidth(), window.getHeight());
+		render.resize(window.getWidth(), window.getHeight());
 	}
 
 	private void run() {

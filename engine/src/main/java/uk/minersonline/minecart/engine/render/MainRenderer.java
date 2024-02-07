@@ -29,8 +29,7 @@ public class MainRenderer implements Destroyable, Resizeable {
 
 	public void render(Window window, Scene scene) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		WindowProperties properties = window.getProperties();
-		glViewport(0, 0, properties.width, properties.height);
+		glViewport(0, 0, window.getWidth(), window.getHeight());
 		renderers.forEach((renderer) -> renderer.render(scene));
 	}
 

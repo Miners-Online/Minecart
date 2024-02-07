@@ -21,7 +21,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window implements Destroyable {
 	private final long handle;
-
 	private final WindowProperties properties;
 	private final Callable<Void> resizeFunc;
 	private final MouseInput mouseInput;
@@ -33,8 +32,12 @@ public class Window implements Destroyable {
 		this.mouseInput = new MouseInput(handle);
 	}
 
-	public WindowProperties getProperties() {
-		return properties;
+	public int getWidth() {
+		return properties.width;
+	}
+
+	public int getHeight() {
+		return properties.height;
 	}
 
 	public MouseInput getMouseInput() {

@@ -55,8 +55,7 @@ public class GuiRenderer implements Renderer, Resizeable {
 
 		ImGuiIO imGuiIO = ImGui.getIO();
 		imGuiIO.setIniFilename(null);
-		WindowProperties properties = window.getProperties();
-		imGuiIO.setDisplaySize(properties.width, properties.height);
+		imGuiIO.setDisplaySize(window.getWidth(), window.getHeight());
 
 		ImFontAtlas fontAtlas = ImGui.getIO().getFonts();
 		ImInt width = new ImInt();
