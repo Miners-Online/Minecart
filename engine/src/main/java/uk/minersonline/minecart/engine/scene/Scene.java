@@ -1,11 +1,11 @@
 package uk.minersonline.minecart.engine.scene;
 
 
+import dev.dominion.ecs.api.Dominion;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
 import uk.minersonline.minecart.engine.render.Resizeable;
 import uk.minersonline.minecart.engine.render.objects.TextureCache;
 import uk.minersonline.minecart.engine.scene.objects.Camera;
-import uk.minersonline.minecart.engine.scene.objects.Entity;
 import uk.minersonline.minecart.engine.scene.objects.Model;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Scene implements Destroyable, Resizeable {
-
+	private final Dominion dominion = Dominion.create();
 	private final Map<String, Model> modelMap;
 	private final Projection3D projection;
 	private final TextureCache cache;
@@ -28,13 +28,8 @@ public class Scene implements Destroyable, Resizeable {
 		camera = new Camera();
 	}
 
-	public void addEntity(Entity entity) {
-		String modelId = entity.getModelId();
-		Model model = modelMap.get(modelId);
-		if (model == null) {
-			throw new RuntimeException("Could not find model [" + modelId + "]");
-		}
-		model.getEntitiesList().add(entity);
+	public Dominion getDominion() {
+		return dominion;
 	}
 
 	public void addModel(Model model) {

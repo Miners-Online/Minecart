@@ -5,7 +5,6 @@ import imgui.ImGuiIO;
 import imgui.flag.ImGuiCond;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
@@ -13,8 +12,9 @@ import uk.minersonline.minecart.engine.gui.GuiRenderer;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.scene.EntityRenderer;
 import uk.minersonline.minecart.engine.scene.Scene;
+import uk.minersonline.minecart.engine.scene.components.ModelComponent;
+import uk.minersonline.minecart.engine.scene.components.TransformComponent;
 import uk.minersonline.minecart.engine.scene.objects.Camera;
-import uk.minersonline.minecart.engine.scene.objects.Entity;
 import uk.minersonline.minecart.engine.render.objects.Mesh;
 import uk.minersonline.minecart.engine.scene.objects.Material;
 import uk.minersonline.minecart.engine.scene.objects.Model;
@@ -30,7 +30,6 @@ import java.util.List;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements Application, GuiInstance {
-	private Entity cubeEntity;
 	private float rotation;
 
 	private static final float MOUSE_SENSITIVITY = 0.2f;
@@ -156,9 +155,11 @@ public class Main implements Application, GuiInstance {
 		Model cubeModel = new Model("cube-model", materialList);
 		scene.addModel(cubeModel);
 
-		cubeEntity = new Entity("cube-entity", cubeModel.getId());
-		cubeEntity.setPosition(0, 0, -2);
-		scene.addEntity(cubeEntity);
+		scene.getDominion().createEntity(
+				"cube-entity",
+				new TransformComponent(new Vector3f(0, 0, -2)),
+				new ModelComponent("cube-model")
+		);
 
 		renderer.addRenderer(new EntityRenderer());
 		renderer.addRenderer(new GuiRenderer(window));
@@ -199,12 +200,20 @@ public class Main implements Application, GuiInstance {
 
 	@Override
 	public void update(Window window, Scene scene, long deltaTime) {
-		rotation += 1.5f;
-		if (rotation > 360) {
-			rotation = 0;
-		}
-		cubeEntity.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-		cubeEntity.updateModelMatrix();
+		scene.getDominion().findEntitiesWith(String.class, TransformComponent.class)
+			.stream().forEach(result -> {
+				String name = result.comp1();
+				TransformComponent position = result.comp2();
+				if (name.equals("cube-entity")) {
+					rotation += 1.5f;
+					if (rotation > 360) {
+						rotation = 0;
+					}
+					position.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
+					position.updateModelMatrix();
+				}
+			}
+		);
 	}
 
 	@Override

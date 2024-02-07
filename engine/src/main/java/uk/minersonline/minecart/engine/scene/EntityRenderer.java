@@ -6,7 +6,8 @@ import uk.minersonline.minecart.engine.render.UniformsMap;
 import uk.minersonline.minecart.engine.render.objects.Mesh;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.render.objects.TextureCache;
-import uk.minersonline.minecart.engine.scene.objects.Entity;
+import uk.minersonline.minecart.engine.scene.components.ModelComponent;
+import uk.minersonline.minecart.engine.scene.components.TransformComponent;
 import uk.minersonline.minecart.engine.scene.objects.Material;
 import uk.minersonline.minecart.engine.scene.objects.Model;
 import uk.minersonline.minecart.engine.render.Renderer;
@@ -49,21 +50,25 @@ public class EntityRenderer implements Renderer {
 		Collection<Model> models = scene.getModelMap().values();
 		TextureCache textureCache = scene.getCache();
 		for (Model model : models) {
-			List<Entity> entities = model.getEntitiesList();
+			scene.getDominion().findEntitiesWith(ModelComponent.class, TransformComponent.class)
+				.stream().forEach(result -> {
+					String modelId = result.comp1().getModelId();
+					TransformComponent position = result.comp2();
+					if (modelId.equals(model.getId())) {
+						for (Material material : model.getMaterialList()) {
+							Texture texture = textureCache.getTexture(material.getTexturePath());
+							glActiveTexture(GL_TEXTURE0);
+							texture.bind();
 
-			for (Material material : model.getMaterialList()) {
-				Texture texture = textureCache.getTexture(material.getTexturePath());
-				glActiveTexture(GL_TEXTURE0);
-				texture.bind();
-
-				for (Mesh mesh : material.getMeshList()) {
-					glBindVertexArray(mesh.getVaoId());
-					for (Entity entity : entities) {
-						uniforms.setUniform("modelMatrix", entity.getModelMatrix());
-						glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+							for (Mesh mesh : material.getMeshList()) {
+								glBindVertexArray(mesh.getVaoId());
+								uniforms.setUniform("modelMatrix", position.getModelMatrix());
+								glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
+							}
+						}
 					}
 				}
-			}
+			);
 		}
 
 		glBindVertexArray(0);

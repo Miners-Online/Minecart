@@ -28,6 +28,7 @@ dependencies {
 
     implementation "io.github.spair:imgui-java-binding:$imguiVersion"
     implementation "io.github.spair:imgui-java-lwjgl3:$imguiVersion"
+    implementation "dev.dominion.ecs:dominion-ecs-engine:0.9.0"
 }
 
 test {
