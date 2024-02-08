@@ -75,9 +75,10 @@ public class Engine implements Destroyable {
 			deltaUpdate += (now - initialTime) / timeU;
 			deltaFps += (now - initialTime) / timeR;
 
+			window.getMouseInput().input();
+			boolean inputConsumed = guiInstance != null && handleGuiInput(window);
+
 			if (targetFps <= 0 || deltaFps >= 1) {
-				window.getMouseInput().input();
-				boolean inputConsumed = guiInstance != null && handleGuiInput(window);
 				application.input(window, scene, now - initialTime, inputConsumed);
 			}
 
@@ -88,11 +89,10 @@ public class Engine implements Destroyable {
 				deltaUpdate--;
 			}
 
-			if (targetFps <= 0 || deltaFps >= 1) {
-				render.render(window, scene);
-				deltaFps--;
-				window.update();
-			}
+
+			render.render(window, scene);
+			deltaFps--;
+			window.update();
 			initialTime = now;
 		}
 

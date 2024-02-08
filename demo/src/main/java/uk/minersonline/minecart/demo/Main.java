@@ -41,8 +41,8 @@ public class Main implements Application, GuiInstance {
 		Main main = new Main();
 		WindowProperties properties = new WindowProperties();
 		properties.title = "Demo App";
-		properties.width = 300;
-		properties.height = 300;
+		properties.width = 600;
+		properties.height = 600;
 		Engine engine = new Engine(properties, main);
 		engine.start();
 	}
@@ -229,8 +229,6 @@ public class Main implements Application, GuiInstance {
 
 	@Override
 	public void drawGui(Scene scene) {
-		ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
-		ImGui.showDemoWindow();
 		debugGui.drawGui(scene);
 	}
 }

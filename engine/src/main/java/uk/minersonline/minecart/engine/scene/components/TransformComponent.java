@@ -2,7 +2,6 @@ package uk.minersonline.minecart.engine.scene.components;
 
 import imgui.ImGui;
 import imgui.type.ImFloat;
-import imgui.type.ImString;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -12,45 +11,48 @@ public class TransformComponent extends AbstractComponent {
     private final Vector3f position;
     private final Quaternionf rotation;
     private float scale;
+    private float[] _position;
+    private float[] _rotation;
+    private final ImFloat _scale;
 
     public TransformComponent(Vector3f position, Quaternionf rotation, float scale) {
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
+
+        this._position = new float[]{position.x, position.y, position.z};
+        this._rotation = new float[]{rotation.x, rotation.y, rotation.z};
+        this._scale = new ImFloat(scale);
     }
 
     public TransformComponent(Vector3f position, Quaternionf rotation) {
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = 1;
+        this(position, rotation, 1);
     }
 
     public TransformComponent(Vector3f position) {
-        this.position = position;
-        this.rotation = new Quaternionf();
-        this.scale = 1;
+        this(position, new Quaternionf(), 1);
     }
 
     public Matrix4f getModelMatrix() {
-        return modelMatrix;
+        return this.modelMatrix;
     }
 
     public Vector3f getPosition() {
-        return position;
+        return this.position;
     }
 
     public Quaternionf getRotation() {
-        return rotation;
+        return this.rotation;
     }
 
     public float getScale() {
-        return scale;
+        return this.scale;
     }
 
     public final void setPosition(float x, float y, float z) {
-        position.x = x;
-        position.y = y;
-        position.z = z;
+        this.position.x = x;
+        this.position.y = y;
+        this.position.z = z;
     }
 
     public void setRotation(float x, float y, float z, float angle) {
@@ -62,23 +64,33 @@ public class TransformComponent extends AbstractComponent {
     }
 
     public void updateModelMatrix() {
-        modelMatrix.translationRotateScale(position, rotation, scale);
+        this.modelMatrix.translationRotateScale(this.position, this.rotation, this.scale);
     }
 
     @Override
     public void drawGui() {
+        if (this._position[0] != this.position.x || this._position[1] != this.position.y || this._position[2] != this.position.z) {
+            this._position = new float[]{this.position.x, this.position.y, this.position.z};
+        }
+        if (this._rotation[0] != this.rotation.x || this._rotation[1] != this.rotation.y || this._rotation[2] != this.rotation.z) {
+            this._rotation = new float[]{this.rotation.x, this.rotation.y, this.rotation.z};
+        }
+        if (this._scale.get() != this.scale) {
+            this._scale.set(this.scale);
+        }
+
         ImGui.text("Transform Component");
         ImGui.separator();
-        ImGui.beginDisabled();
-        ImGui.text("Position");
-        ImGui.inputFloat("X", new ImFloat(position.x));
-        ImGui.inputFloat("Y", new ImFloat(position.y));
-        ImGui.inputFloat("Z", new ImFloat(position.z));
-        ImGui.text("Rotation");
-        ImGui.inputFloat("X", new ImFloat(rotation.x));
-        ImGui.inputFloat("Y", new ImFloat(rotation.y));
-        ImGui.inputFloat("Z", new ImFloat(rotation.z));
-        ImGui.inputFloat("Scale", new ImFloat(scale));
-        ImGui.endDisabled();
+        ImGui.inputFloat("Scale", _scale);
+        ImGui.inputFloat3("Position", _position);
+        ImGui.inputFloat3("Rotation", _rotation);
+
+        position.x = _position[0];
+        position.y = _position[1];
+        position.z = _position[2];
+        rotation.x = _rotation[0];
+        rotation.y = _rotation[1];
+        rotation.z = _rotation[2];
+        scale = _scale.get();
     }
 }
