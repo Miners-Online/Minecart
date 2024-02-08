@@ -174,6 +174,7 @@ public class Window implements Destroyable {
 		GL.createCapabilities();
 		ImGui.createContext();
 		ImGuiIO io = ImGui.getIO();
+		io.setIniFilename(null);
 		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 		window.imGuiGlfw.init(window.handle, true);
 		window.imGuiGl3.init("#version 130");
