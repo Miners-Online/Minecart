@@ -19,7 +19,11 @@ public class DebugGui implements GuiInstance {
             for (Entity entity : results) {
                 String name = entity.get(String.class);
                 if (ImGui.selectable(name, entity == selected)) {
-                    selected = entity;
+                    if (selected == entity) {
+                        selected = null;
+                    } else {
+                        selected = entity;
+                    }
                 }
             }
         }
