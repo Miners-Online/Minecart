@@ -1,10 +1,13 @@
 package uk.minersonline.minecart.engine.scene.components;
 
+import imgui.ImGui;
+import imgui.type.ImFloat;
+import imgui.type.ImString;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-public class TransformComponent {
+public class TransformComponent extends AbstractComponent {
     private final Matrix4f modelMatrix = new Matrix4f();
     private final Vector3f position;
     private final Quaternionf rotation;
@@ -60,5 +63,22 @@ public class TransformComponent {
 
     public void updateModelMatrix() {
         modelMatrix.translationRotateScale(position, rotation, scale);
+    }
+
+    @Override
+    public void drawGui() {
+        ImGui.text("Transform Component");
+        ImGui.separator();
+        ImGui.beginDisabled();
+        ImGui.text("Position");
+        ImGui.inputFloat("X", new ImFloat(position.x));
+        ImGui.inputFloat("Y", new ImFloat(position.y));
+        ImGui.inputFloat("Z", new ImFloat(position.z));
+        ImGui.text("Rotation");
+        ImGui.inputFloat("X", new ImFloat(rotation.x));
+        ImGui.inputFloat("Y", new ImFloat(rotation.y));
+        ImGui.inputFloat("Z", new ImFloat(rotation.z));
+        ImGui.inputFloat("Scale", new ImFloat(scale));
+        ImGui.endDisabled();
     }
 }

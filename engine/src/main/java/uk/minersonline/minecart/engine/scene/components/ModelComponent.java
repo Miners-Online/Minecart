@@ -1,6 +1,9 @@
 package uk.minersonline.minecart.engine.scene.components;
 
-public class ModelComponent {
+import imgui.ImGui;
+import imgui.type.ImString;
+
+public class ModelComponent extends AbstractComponent{
     private final String modelId;
 
     public ModelComponent(String modelId) {
@@ -9,5 +12,14 @@ public class ModelComponent {
 
     public String getModelId() {
         return modelId;
+    }
+
+    @Override
+    public void drawGui() {
+        ImGui.text("Model Component");
+        ImGui.separator();
+        ImGui.beginDisabled();
+        ImGui.inputText("Model", new ImString(modelId));
+        ImGui.endDisabled();
     }
 }
