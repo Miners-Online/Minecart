@@ -162,7 +162,6 @@ public class Main implements Application, GuiInstance {
 		);
 
 		renderer.addRenderer(new EntityRenderer());
-//		renderer.addRenderer(new GuiRenderer(window));
 		scene.setGuiInstance(this);
 	}
 
