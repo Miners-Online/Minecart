@@ -69,8 +69,6 @@ public class Engine implements Destroyable {
 
 		long updateTime = initialTime;
 		while (running && !window.shouldClose()) {
-			window.pollEvents();
-
 			long now = System.currentTimeMillis();
 			deltaUpdate += (now - initialTime) / timeU;
 			deltaFps += (now - initialTime) / timeR;
@@ -89,10 +87,9 @@ public class Engine implements Destroyable {
 				deltaUpdate--;
 			}
 
-
 			render.render(window, scene);
 			deltaFps--;
-			window.update();
+			window.render(scene);
 			initialTime = now;
 		}
 

@@ -1,10 +1,8 @@
 package uk.minersonline.minecart.engine.render;
 
-import org.lwjgl.opengl.GL;
 import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
-import uk.minersonline.minecart.engine.window.WindowProperties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +11,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class MainRenderer implements Destroyable, Resizeable {
 	private final List<Renderer> renderers = new ArrayList<>();
-
-	public MainRenderer() {
-		GL.createCapabilities();
-	}
 
 	public void addRenderer(Renderer renderer) {
 		renderers.add(renderer);

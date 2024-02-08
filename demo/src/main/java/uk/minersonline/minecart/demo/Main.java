@@ -1,15 +1,11 @@
 package uk.minersonline.minecart.demo;
 
-import imgui.ImGui;
-import imgui.ImGuiIO;
-import imgui.flag.ImGuiCond;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
 import uk.minersonline.minecart.engine.gui.DebugGui;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
-import uk.minersonline.minecart.engine.gui.GuiRenderer;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.scene.EntityRenderer;
 import uk.minersonline.minecart.engine.scene.Scene;
@@ -166,7 +162,7 @@ public class Main implements Application, GuiInstance {
 		);
 
 		renderer.addRenderer(new EntityRenderer());
-		renderer.addRenderer(new GuiRenderer(window));
+//		renderer.addRenderer(new GuiRenderer(window));
 		scene.setGuiInstance(this);
 	}
 

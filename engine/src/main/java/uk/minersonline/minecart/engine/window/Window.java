@@ -1,9 +1,17 @@
 package uk.minersonline.minecart.engine.window;
 
+import imgui.ImGui;
+import imgui.ImGuiIO;
+import imgui.flag.ImGuiConfigFlags;
+import imgui.gl3.ImGuiImplGl3;
+import imgui.glfw.ImGuiImplGlfw;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.utils.ColorUtils;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.input.MouseInput;
@@ -25,11 +33,16 @@ public class Window implements Destroyable {
 	private final Callable<Void> resizeFunc;
 	private final MouseInput mouseInput;
 
+	private final ImGuiImplGlfw imGuiGlfw;
+	private final ImGuiImplGl3 imGuiGl3;
+
 	private Window(long handle, WindowProperties properties, Callable<Void> resizeFunc) {
 		this.resizeFunc = resizeFunc;
 		this.handle = handle;
 		this.properties = properties;
 		this.mouseInput = new MouseInput(handle);
+		this.imGuiGl3 = new ImGuiImplGl3();
+		this.imGuiGlfw = new ImGuiImplGlfw();
 	}
 
 	public int getWidth() {
@@ -48,10 +61,6 @@ public class Window implements Destroyable {
 		return glfwWindowShouldClose(handle);
 	}
 
-	public void update() {
-		glfwSwapBuffers(handle);
-	}
-
 	public boolean isKeyPressed(int keyCode) {
 		return glfwGetKey(handle, keyCode) == GLFW_PRESS;
 	}
@@ -60,10 +69,6 @@ public class Window implements Destroyable {
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
 			glfwSetWindowShouldClose(handle, true); // We will detect this in the rendering loop
 		}
-	}
-
-	public void pollEvents() {
-		glfwPollEvents();
 	}
 
 	public void setClearColor(Color color) {
@@ -90,6 +95,9 @@ public class Window implements Destroyable {
 
 	@Override
 	public void destroy() {
+		imGuiGl3.dispose();
+		imGuiGlfw.dispose();
+		ImGui.destroyContext();
 		glfwFreeCallbacks(this.handle);
 		glfwDestroyWindow(this.handle);
 	}
@@ -162,10 +170,37 @@ public class Window implements Destroyable {
 		glfwGetFramebufferSize(windowHandle, arrWidth, arrHeight);
 		properties.width = arrWidth[0];
 		properties.height = arrHeight[0];
+
+		GL.createCapabilities();
+		ImGui.createContext();
+		ImGuiIO io = ImGui.getIO();
+		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+		window.imGuiGlfw.init(window.handle, true);
+		window.imGuiGl3.init("#version 130");
 		return window;
 	}
 
 	public long getWindowHandle() {
 		return handle;
+	}
+
+	public void render(Scene scene) {
+		imGuiGlfw.newFrame();
+		ImGui.newFrame();
+
+		scene.getGuiInstance().drawGui(scene);
+
+		ImGui.render();
+		imGuiGl3.renderDrawData(ImGui.getDrawData());
+
+		if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
+			final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
+			ImGui.updatePlatformWindows();
+			ImGui.renderPlatformWindowsDefault();
+			org.lwjgl.glfw.GLFW.glfwMakeContextCurrent(backupWindowPtr);
+		}
+
+		GLFW.glfwSwapBuffers(handle);
+		GLFW.glfwPollEvents();
 	}
 }
