@@ -13,7 +13,7 @@ public class DebugGui implements GuiInstance {
     private Entity selected;
     @Override
     public void drawGui(Scene scene) {
-        ImGui.setNextWindowSize(200, 440, ImGuiCond.FirstUseEver);
+        ImGui.setNextWindowSize(250, 440, ImGuiCond.FirstUseEver);
         if (ImGui.begin("Objects")) {
             Results<Entity> results = scene.getDominion().findAllEntities();
             for (Entity entity : results) {
@@ -25,7 +25,7 @@ public class DebugGui implements GuiInstance {
         }
         ImGui.end();
 
-        ImGui.setNextWindowSize(200, 440, ImGuiCond.FirstUseEver);
+        ImGui.setNextWindowSize(250, 440, ImGuiCond.FirstUseEver);
         if (ImGui.begin("Properties")) {
             if (selected != null) {
                 IntEntity entity = (IntEntity) selected;

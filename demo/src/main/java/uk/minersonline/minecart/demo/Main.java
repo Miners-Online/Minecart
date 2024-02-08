@@ -37,8 +37,8 @@ public class Main implements Application, GuiInstance {
 		Main main = new Main();
 		WindowProperties properties = new WindowProperties();
 		properties.title = "Demo App";
-		properties.width = 600;
-		properties.height = 600;
+		properties.width = 700;
+		properties.height = 700;
 		Engine engine = new Engine(properties, main);
 		engine.start();
 	}
