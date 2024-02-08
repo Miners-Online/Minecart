@@ -1,11 +1,15 @@
 package uk.minersonline.minecart.engine;
 
+import imgui.ImGui;
+import imgui.ImGuiIO;
+import org.joml.Vector2f;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
 import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
 import uk.minersonline.minecart.engine.render.MainRenderer;
+import uk.minersonline.minecart.engine.window.input.MouseInput;
 
 public class Engine implements Destroyable {
 	public static final int TARGET_UPS = 30;
@@ -44,6 +48,17 @@ public class Engine implements Destroyable {
 		render.resize(window.getWidth(), window.getHeight());
 	}
 
+	private boolean handleGuiInput(Window window) {
+		ImGuiIO imGuiIO = ImGui.getIO();
+		MouseInput mouseInput = window.getMouseInput();
+		Vector2f mousePos = mouseInput.getCurrentPos();
+		imGuiIO.setMousePos(mousePos.x, mousePos.y);
+		imGuiIO.setMouseDown(0, mouseInput.isLeftButtonPressed());
+		imGuiIO.setMouseDown(1, mouseInput.isRightButtonPressed());
+
+		return imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
+	}
+
 	private void run() {
 		GuiInstance guiInstance = scene.getGuiInstance();
 		long initialTime = System.currentTimeMillis();
@@ -62,7 +77,7 @@ public class Engine implements Destroyable {
 
 			if (targetFps <= 0 || deltaFps >= 1) {
 				window.getMouseInput().input();
-				boolean inputConsumed = guiInstance != null && guiInstance.handleGuiInput(scene, window);
+				boolean inputConsumed = guiInstance != null && handleGuiInput(window);
 				application.input(window, scene, now - initialTime, inputConsumed);
 			}
 

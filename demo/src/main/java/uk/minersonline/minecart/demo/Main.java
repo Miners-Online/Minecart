@@ -7,6 +7,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
+import uk.minersonline.minecart.engine.gui.DebugGui;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
 import uk.minersonline.minecart.engine.gui.GuiRenderer;
 import uk.minersonline.minecart.engine.render.objects.Texture;
@@ -34,6 +35,7 @@ public class Main implements Application, GuiInstance {
 
 	private static final float MOUSE_SENSITIVITY = 0.2f;
 	private static final float MOVEMENT_SPEED = 0.005f;
+	private DebugGui debugGui;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -47,6 +49,7 @@ public class Main implements Application, GuiInstance {
 
 	@Override
 	public void init(Window window, Scene scene, MainRenderer renderer) {
+		debugGui = new DebugGui();
 		window.setClearColor(Color.CYAN);
 		window.center();
 
@@ -98,7 +101,7 @@ public class Main implements Application, GuiInstance {
 				// V18: V1 repeated
 				-0.5f, -0.5f, 0.5f,
 				// V19: V2 repeated
-				0.5f, -0.5f, 0.5f,
+				0.5f, -0.5f, 0.5f
 		};
 		float[] textCoords = new float[]{
 				0.0f, 0.0f,
@@ -129,7 +132,7 @@ public class Main implements Application, GuiInstance {
 				0.5f, 0.0f,
 				1.0f, 0.0f,
 				0.5f, 0.5f,
-				1.0f, 0.5f,
+				1.0f, 0.5f
 		};
 		int[] indices = new int[]{
 				// Front face
@@ -143,7 +146,8 @@ public class Main implements Application, GuiInstance {
 				// Bottom face
 				16, 18, 19, 17, 16, 19,
 				// Back face
-				4, 6, 7, 5, 4, 7,};
+				4, 6, 7, 5, 4, 7
+		};
 		Texture texture = scene.getCache().createTexture("models/cube/cube.png", true);
 		Material material = new Material();
 		material.setTexturePath(texture.getTexturePath());
@@ -225,22 +229,8 @@ public class Main implements Application, GuiInstance {
 
 	@Override
 	public void drawGui() {
-		ImGui.newFrame();
 		ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
 		ImGui.showDemoWindow();
-		ImGui.endFrame();
-		ImGui.render();
-	}
-
-	@Override
-	public boolean handleGuiInput(Scene scene, Window window) {
-		ImGuiIO imGuiIO = ImGui.getIO();
-		MouseInput mouseInput = window.getMouseInput();
-		Vector2f mousePos = mouseInput.getCurrentPos();
-		imGuiIO.setMousePos(mousePos.x, mousePos.y);
-		imGuiIO.setMouseDown(0, mouseInput.isLeftButtonPressed());
-		imGuiIO.setMouseDown(1, mouseInput.isRightButtonPressed());
-
-		return imGuiIO.getWantCaptureMouse() || imGuiIO.getWantCaptureKeyboard();
+		debugGui.drawGui();
 	}
 }
