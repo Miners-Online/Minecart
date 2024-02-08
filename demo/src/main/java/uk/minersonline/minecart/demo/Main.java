@@ -209,14 +209,14 @@ public class Main implements Application, GuiInstance {
 		scene.getDominion().findEntitiesWith(String.class, TransformComponent.class)
 			.stream().forEach(result -> {
 				String name = result.comp1();
-				TransformComponent position = result.comp2();
+				TransformComponent transform = result.comp2();
 				if (name.equals("cube-entity")) {
 					rotation += 1.5f;
 					if (rotation > 360) {
 						rotation = 0;
 					}
-					position.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-					position.updateModelMatrix();
+					transform.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
+					transform.updateModelMatrix();
 				}
 			}
 		);
@@ -228,9 +228,9 @@ public class Main implements Application, GuiInstance {
 	}
 
 	@Override
-	public void drawGui() {
+	public void drawGui(Scene scene) {
 		ImGui.setNextWindowPos(0, 0, ImGuiCond.Always);
 		ImGui.showDemoWindow();
-		debugGui.drawGui();
+		debugGui.drawGui(scene);
 	}
 }

@@ -125,7 +125,7 @@ public class GuiRenderer implements Renderer, Resizeable {
 			return;
 		}
 		ImGui.newFrame();
-		guiInstance.drawGui();
+		guiInstance.drawGui(scene);
 		ImGui.endFrame();
 		ImGui.render();
 
