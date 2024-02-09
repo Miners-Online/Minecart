@@ -156,8 +156,14 @@ public class Main implements Application, GuiInstance {
 		scene.addModel(cubeModel);
 
 		scene.getDominion().createEntity(
-				"cube-entity",
+				"cube-entity1",
 				new TransformComponent(new Vector3f(0, 0, -2)),
+				new ModelComponent("cube-model")
+		);
+
+		scene.getDominion().createEntity(
+				"cube-entity2",
+				new TransformComponent(new Vector3f(0, 0, 2)),
 				new ModelComponent("cube-model")
 		);
 
@@ -201,15 +207,16 @@ public class Main implements Application, GuiInstance {
 
 	@Override
 	public void update(Window window, Scene scene, long deltaTime) {
+		rotation += 1.5f;
+		if (rotation > 360) {
+			rotation = 0;
+		}
 		scene.getDominion().findEntitiesWith(String.class, TransformComponent.class)
 			.stream().forEach(result -> {
 				String name = result.comp1();
 				TransformComponent transform = result.comp2();
-				if (name.equals("cube-entity")) {
-					rotation += 1.5f;
-					if (rotation > 360) {
-						rotation = 0;
-					}
+
+				if (name.equals("cube-entity1") || name.equals("cube-entity2")) {
 					transform.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
 					transform.updateModelMatrix();
 				}
