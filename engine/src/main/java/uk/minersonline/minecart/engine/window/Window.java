@@ -65,12 +65,6 @@ public class Window implements Destroyable {
 		return glfwGetKey(handle, keyCode) == GLFW_PRESS;
 	}
 
-	public void keyCallBack(int key, int action) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-			glfwSetWindowShouldClose(handle, true); // We will detect this in the rendering loop
-		}
-	}
-
 	public void setClearColor(Color color) {
 		Vector4f GLColor = ColorUtils.colorToOpenGL(color);
 		glClearColor(GLColor.x, GLColor.y, GLColor.z, GLColor.w);
@@ -148,10 +142,6 @@ public class Window implements Destroyable {
 		glfwSetErrorCallback((int errorCode, long msgPtr) ->
 				System.err.printf("Error code [%s], msg [%s]%n", errorCode, MemoryUtil.memUTF8(msgPtr))
 		);
-
-		glfwSetKeyCallback(windowHandle, (_w, key, scancode, action, mods) -> {
-			window.keyCallBack(key, action);
-		});
 
 		glfwMakeContextCurrent(windowHandle);
 

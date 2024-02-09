@@ -1,7 +1,10 @@
 package uk.minersonline.minecart.demo;
 
+import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFWCharCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
 import uk.minersonline.minecart.engine.gui.DebugGui;
@@ -28,10 +31,12 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Main implements Application, GuiInstance {
 	private float rotation;
-
+	private GLFWKeyCallback prevUserCallbackKey = null;
 	private static final float MOUSE_SENSITIVITY = 0.2f;
 	private static final float MOVEMENT_SPEED = 0.005f;
 	private DebugGui debugGui;
+	private ImBoolean debugEnabled = new ImBoolean(false);
+	private Window window;
 
 	public static void main(String[] args) {
 		Main main = new Main();
@@ -48,6 +53,7 @@ public class Main implements Application, GuiInstance {
 		debugGui = new DebugGui();
 		window.setClearColor(Color.CYAN);
 		window.center();
+		this.window = window;
 
 		float[] positions = new float[]{
 				// V0
@@ -169,6 +175,17 @@ public class Main implements Application, GuiInstance {
 
 		renderer.addRenderer(new EntityRenderer());
 		scene.setGuiInstance(this);
+
+		prevUserCallbackKey = glfwSetKeyCallback(window.getWindowHandle(), this::keyCallback);
+	}
+
+	private void keyCallback(final long windowId, final int key, final int scancode, final int action, final int mods) {
+		if (prevUserCallbackKey != null && windowId == this.window.getWindowHandle()) {
+			prevUserCallbackKey.invoke(windowId, key, scancode, action, mods);
+		}
+		if (key == GLFW_KEY_F3 && action == GLFW_RELEASE) {
+			this.debugEnabled.set(!this.debugEnabled.get());
+		}
 	}
 
 	@Override
@@ -231,6 +248,8 @@ public class Main implements Application, GuiInstance {
 
 	@Override
 	public void drawGui(Scene scene) {
-		debugGui.drawGui(scene);
+		if (this.debugEnabled.get()) {
+			debugGui.drawGui(scene);
+		}
 	}
 }

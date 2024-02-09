@@ -53,9 +53,11 @@ public class EntityRenderer implements Renderer {
 			scene.getDominion().findEntitiesWith(ModelComponent.class, TransformComponent.class)
 				.stream().forEach(result -> {
 					String modelId = result.comp1().getModelId();
-					TransformComponent position = result.comp2();
-					if (modelId.equals(model.getId())) {
-						processEntity(model, position, textureCache);
+					TransformComponent transform = result.comp2();
+					if (transform.getScale() > 0) {
+						if (modelId.equals(model.getId())) {
+							processEntity(model, transform, textureCache);
+						}
 					}
 				}
 			);
@@ -66,7 +68,7 @@ public class EntityRenderer implements Renderer {
 		shaderProgram.unbind();
 	}
 
-	private void processEntity(Model model, TransformComponent position, TextureCache textureCache) {
+	private void processEntity(Model model, TransformComponent transform, TextureCache textureCache) {
 		for (Material material : model.getMaterialList()) {
 			Texture texture = textureCache.getTexture(material.getTexturePath());
 			glActiveTexture(GL_TEXTURE0);
@@ -74,7 +76,7 @@ public class EntityRenderer implements Renderer {
 
 			for (Mesh mesh : material.getMeshList()) {
 				glBindVertexArray(mesh.getVaoId());
-				uniforms.setUniform("modelMatrix", position.getModelMatrix());
+				uniforms.setUniform("modelMatrix", transform.getModelMatrix());
 				glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
 			}
 		}
