@@ -176,6 +176,8 @@ public class Window implements Destroyable {
 		ImGuiIO io = ImGui.getIO();
 		io.setIniFilename(null);
 		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+		io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+		io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
 		window.imGuiGlfw.init(window.handle, true);
 		window.imGuiGl3.init("#version 130");
 		return window;
