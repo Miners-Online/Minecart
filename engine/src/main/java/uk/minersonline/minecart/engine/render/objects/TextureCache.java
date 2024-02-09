@@ -34,4 +34,8 @@ public class TextureCache implements Destroyable {
 		}
 		return texture;
 	}
+
+	public Map<String, Texture> getTextureMap() {
+		return Collections.unmodifiableMap(textureMap);
+	}
 }

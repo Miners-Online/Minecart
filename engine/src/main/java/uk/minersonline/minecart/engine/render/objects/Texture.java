@@ -69,4 +69,8 @@ public class Texture implements Destroyable {
 	public String getTexturePath() {
 		return texturePath;
 	}
+
+	public int getTextureId() {
+		return textureId;
+	}
 }
