@@ -35,7 +35,7 @@ public class Main implements Application, GuiInstance {
 	private static final float MOUSE_SENSITIVITY = 0.2f;
 	private static final float MOVEMENT_SPEED = 0.005f;
 	private DebugGui debugGui;
-	private ImBoolean debugEnabled = new ImBoolean(false);
+	private final ImBoolean debugEnabled = new ImBoolean(false);
 	private Window window;
 
 	public static void main(String[] args) {
