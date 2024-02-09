@@ -3,7 +3,6 @@ package uk.minersonline.minecart.demo;
 import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWCharCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import uk.minersonline.minecart.engine.Application;
 import uk.minersonline.minecart.engine.Engine;
