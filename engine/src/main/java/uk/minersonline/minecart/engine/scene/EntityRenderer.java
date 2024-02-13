@@ -22,8 +22,8 @@ public class EntityRenderer implements Renderer {
 
 	public EntityRenderer() {
 		List<Shader.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity.vert", GL_VERTEX_SHADER, true));
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity.frag", GL_FRAGMENT_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity/shader.vert", GL_VERTEX_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity/shader.frag", GL_FRAGMENT_SHADER, true));
 		shaderProgram = new Shader(shaderModuleDataList);
 		uniforms = new UniformsMap(shaderProgram.getProgramId());
 		uniforms.createUniform("projectionMatrix");
@@ -76,6 +76,7 @@ public class EntityRenderer implements Renderer {
 
 			for (Mesh mesh : material.getMeshList()) {
 				glBindVertexArray(mesh.getVaoId());
+				transform.updateModelMatrix();
 				uniforms.setUniform("modelMatrix", transform.getModelMatrix());
 				glDrawElements(GL_TRIANGLES, mesh.getNumVertices(), GL_UNSIGNED_INT, 0);
 			}

@@ -17,6 +17,8 @@ import uk.minersonline.minecart.engine.scene.objects.Camera;
 import uk.minersonline.minecart.engine.render.objects.Mesh;
 import uk.minersonline.minecart.engine.scene.objects.Material;
 import uk.minersonline.minecart.engine.scene.objects.Model;
+import uk.minersonline.minecart.engine.scene.terrain.VoxelRenderer;
+import uk.minersonline.minecart.engine.scene.terrain.VoxelTerrainComponent;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
 import uk.minersonline.minecart.engine.render.MainRenderer;
@@ -172,6 +174,13 @@ public class Main implements Application, GuiInstance {
 				new ModelComponent("cube-model")
 		);
 
+		scene.getDominion().createEntity(
+				"terrain",
+				new TransformComponent(new Vector3f(0, 0, 0)),
+				new VoxelTerrainComponent("models/cube/cube.png")
+		);
+
+		renderer.addRenderer(new VoxelRenderer());
 		renderer.addRenderer(new EntityRenderer());
 		scene.setGuiInstance(this);
 
@@ -234,7 +243,6 @@ public class Main implements Application, GuiInstance {
 
 				if (name.equals("cube-entity1") || name.equals("cube-entity2")) {
 					transform.setRotation(1, 1, 1, (float) Math.toRadians(rotation));
-					transform.updateModelMatrix();
 				}
 			}
 		);
