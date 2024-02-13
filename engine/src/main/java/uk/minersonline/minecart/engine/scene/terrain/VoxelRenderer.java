@@ -65,7 +65,7 @@ public class VoxelRenderer implements Renderer {
 	}
 
 	private void processTerrain(VoxelTerrainComponent terrain, TransformComponent transform, TextureCache textureCache) {
-		Texture texture = textureCache.getTexture(terrain.getTextureID());
+		Texture texture = textureCache.getTexture("models/default/default_texture");
 		glActiveTexture(GL_TEXTURE0);
 		texture.bind();
 

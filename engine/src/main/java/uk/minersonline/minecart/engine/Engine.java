@@ -4,7 +4,9 @@ import imgui.ImGui;
 import imgui.ImGuiIO;
 import org.joml.Vector2f;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
+import uk.minersonline.minecart.engine.registry.Registries;
 import uk.minersonline.minecart.engine.scene.Scene;
+import uk.minersonline.minecart.engine.scene.terrain.VoxelType;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
 import uk.minersonline.minecart.engine.window.WindowProperties;
@@ -31,7 +33,9 @@ public class Engine implements Destroyable {
 		this.application = application;
 		render = new MainRenderer();
 		scene = new Scene(properties.width, properties.height);
+		VoxelType.init();
 		application.init(window, scene, render);
+		Registries.VOXEL_TYPE.freeze();
 		running = true;
 	}
 

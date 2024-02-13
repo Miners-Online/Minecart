@@ -174,11 +174,13 @@ public class Main implements Application, GuiInstance {
 				new ModelComponent("cube-model")
 		);
 
+		VoxelTerrainComponent terrain = new VoxelTerrainComponent(new ExampleWorldGenerator());
 		scene.getDominion().createEntity(
 				"terrain",
 				new TransformComponent(new Vector3f(0, 0, 0)),
-				new VoxelTerrainComponent("models/cube/cube.png")
+				terrain
 		);
+		terrain.generate();
 
 		renderer.addRenderer(new VoxelRenderer());
 		renderer.addRenderer(new EntityRenderer());

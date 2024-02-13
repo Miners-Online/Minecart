@@ -12,20 +12,25 @@ public class VoxelTerrainComponent extends AbstractComponent {
 	public static int CHUNK_DEPTH = 16;
 
 	private final VoxelType[][][] blocks = new VoxelType[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_DEPTH];
-	private final String textureID;
 
-	public VoxelTerrainComponent(String textureID) {
-		this.textureID = textureID;
+	private final AbstractTerrainGenerator generator;
+
+	public VoxelTerrainComponent(AbstractTerrainGenerator generator) {
+		this.generator = generator;
 		for (int x = 0; x < CHUNK_WIDTH; x++) {
 			for (int y = 0; y < CHUNK_HEIGHT; y++) {
 				for (int z = 0; z < CHUNK_DEPTH; z ++) {
-					if (y == 10) {
-						blocks[x][y][z] = VoxelType.AIR;
-					} else if (z > 12) {
-						blocks[x][y][z] = VoxelType.AIR;
-					} else {
-						blocks[x][y][z] = VoxelType.FILLED;
-					}
+					this.blocks[x][y][z] = VoxelType.AIR;
+				}
+			}
+		}
+	}
+
+	public void generate() {
+		for (int x = 0; x < CHUNK_WIDTH; x++) {
+			for (int y = 0; y < CHUNK_HEIGHT; y++) {
+				for (int z = 0; z < CHUNK_DEPTH; z ++) {
+					this.blocks[x][y][z] = this.generator.generate(x, y, z);
 				}
 			}
 		}
@@ -82,9 +87,5 @@ public class VoxelTerrainComponent extends AbstractComponent {
 			}
 		}
 		return temp_mesh;
-	}
-
-	public String getTextureID() {
-		return textureID;
 	}
 }
