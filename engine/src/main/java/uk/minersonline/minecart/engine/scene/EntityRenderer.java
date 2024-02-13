@@ -22,8 +22,8 @@ public class EntityRenderer implements Renderer {
 
 	public EntityRenderer() {
 		List<Shader.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity/shader.vert", GL_VERTEX_SHADER, true));
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/entity/shader.frag", GL_FRAGMENT_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("minecart/assets/shaders/entity.vsh", GL_VERTEX_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("minecart/assets/shaders/entity.fsh", GL_FRAGMENT_SHADER, true));
 		shaderProgram = new Shader(shaderModuleDataList);
 		uniforms = new UniformsMap(shaderProgram.getProgramId());
 		uniforms.createUniform("projectionMatrix");

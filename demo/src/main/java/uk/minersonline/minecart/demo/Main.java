@@ -151,7 +151,7 @@ public class Main implements Application, GuiInstance {
 				// Back face
 				4, 6, 7, 5, 4, 7
 		};
-		Texture texture = scene.getCache().createTexture("models/cube/cube.png", true);
+		Texture texture = scene.getCache().createTexture("minecart/assets/textures/cube.png", true);
 		Material material = new Material();
 		material.setTexturePath(texture.getTexturePath());
 		List<Material> materialList = new ArrayList<>();
@@ -177,7 +177,7 @@ public class Main implements Application, GuiInstance {
 		VoxelTerrainComponent terrain = new VoxelTerrainComponent(new ExampleWorldGenerator());
 		scene.getDominion().createEntity(
 				"terrain",
-				new TransformComponent(new Vector3f(0, 0, 0)),
+				new TransformComponent(new Vector3f(0, 0, 0), 0.5f),
 				terrain
 		);
 		terrain.generate();

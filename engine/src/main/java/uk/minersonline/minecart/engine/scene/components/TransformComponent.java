@@ -33,6 +33,10 @@ public class TransformComponent extends AbstractComponent {
         this(position, new Quaternionf(), 1);
     }
 
+    public TransformComponent(Vector3f position, float scale) {
+        this(position, new Quaternionf(), scale);
+    }
+
     public Matrix4f getModelMatrix() {
         return this.modelMatrix;
     }

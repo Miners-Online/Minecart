@@ -4,16 +4,12 @@ package uk.minersonline.minecart.engine.scene.terrain;
 import uk.minersonline.minecart.engine.render.Renderer;
 import uk.minersonline.minecart.engine.render.Shader;
 import uk.minersonline.minecart.engine.render.UniformsMap;
-import uk.minersonline.minecart.engine.render.objects.Mesh;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.render.objects.TextureCache;
 import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.scene.components.TransformComponent;
-import uk.minersonline.minecart.engine.scene.objects.Material;
-import uk.minersonline.minecart.engine.scene.objects.Model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL30.*;
@@ -24,8 +20,8 @@ public class VoxelRenderer implements Renderer {
 
 	public VoxelRenderer() {
 		List<Shader.ShaderModuleData> shaderModuleDataList = new ArrayList<>();
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/voxel_terrain/shader.vert", GL_VERTEX_SHADER, true));
-		shaderModuleDataList.add(new Shader.ShaderModuleData("shaders/voxel_terrain/shader.frag", GL_FRAGMENT_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("minecart/assets/shaders/voxel_terrain.vsh", GL_VERTEX_SHADER, true));
+		shaderModuleDataList.add(new Shader.ShaderModuleData("minecart/assets/shaders/voxel_terrain.fsh", GL_FRAGMENT_SHADER, true));
 		shaderProgram = new Shader(shaderModuleDataList);
 		uniforms = new UniformsMap(shaderProgram.getProgramId());
 		uniforms.createUniform("model");
@@ -65,7 +61,7 @@ public class VoxelRenderer implements Renderer {
 	}
 
 	private void processTerrain(VoxelTerrainComponent terrain, TransformComponent transform, TextureCache textureCache) {
-		Texture texture = textureCache.getTexture("models/default/default_texture");
+		Texture texture = textureCache.getTexture("minecart/assets/models/default/default_texture");
 		glActiveTexture(GL_TEXTURE0);
 		texture.bind();
 

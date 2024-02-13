@@ -6,7 +6,7 @@ import uk.minersonline.minecart.engine.utils.Destroyable;
 import java.util.*;
 
 public class TextureCache implements Destroyable {
-	public static final String DEFAULT_TEXTURE = "models/default/default_texture.png";
+	public static final String DEFAULT_TEXTURE = "minecart/assets/textures/default_texture.png";
 
 	private final Map<String, Texture> textureMap;
 
