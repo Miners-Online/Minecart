@@ -1,69 +1,66 @@
 package uk.minersonline.minecart.engine.scene.terrain;
 
-import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
-import uk.minersonline.minecart.engine.registry.Registries;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 
-import java.nio.IntBuffer;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 
 public class VoxelAtlas {
-    private int width, height;
-    private static Vector2f atlasSize;
-    private static int atlasCount;
-    private int textureId;
-    private static Map<String, Texture> images = new HashMap<>();
+    private static final Map<String, Texture> images = new HashMap<>();
     private static Texture textureAtlas;
 
-    public static void createTextureAtlas(){
-        int result = glGenTextures();
-        int width = images.size() * 256;
-        int height = 256;
+    public static void createTextureAtlas() {
+        int width = 0;
+        int height = 0;
 
-        int channels = 4;
-        int[] atlas_data = new int[width * height * channels + 1];
-        atlasSize = new Vector2f(width, height);
-        atlasCount = images.size();
-
-        int index = 0;
-        for (String path : images.keySet()) {
-            for (VoxelType type : Registries.VOXEL_TYPE.getEntries().values()) {
-                if (type.settings.getTexture().equals(path)) {
-                    type.settings.atlasLocation(index);
-                    break;
-                }
-            }
-            Texture subData = images.get(path);
-            byte[] imgData = subData.getData();
-
-            int targetX = 0;
-            int targetY = index*(((32)-index*32)+32/4);
-
-            for (int sourceY = 0; sourceY < 32; ++sourceY) {
-                for (int sourceX = 0; sourceX < 32; ++sourceX) {
-                    int from = (sourceY * 32 * channels) + (sourceX * channels);
-
-                    int to = ((targetY + sourceY) * 32 * channels) + ((targetX + sourceX) * channels); // same format as source
-
-                    for(int channel = 0; channel < channels; ++channel) {
-                        byte data = imgData[from + channel];
-                        atlas_data[to + channel] = data;
-                    }
-                }
-            }
-            index = index + 1;
+        // Adjust width and height based on the biggest texture
+        for (Texture texture : images.values()) {
+             width = width + texture.getWidth();
+             if (texture.getHeight() > height) {
+                 height = texture.getHeight();
+             }
         }
 
-        IntBuffer buffer = BufferUtils.createIntBuffer(atlas_data.length);
-        buffer.put(atlas_data);
+        int result = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, result);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+//        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+//        int index = 0;
+        int totalX = 0;
+        for (String path : images.keySet()) {
+            Texture texture = images.get(path);
+
+            // Calculate position within the atlas
+            int targetX = totalX + texture.getWidth();
+            int targetY = 16; // Assuming all textures are aligned at the top
+
+            // Copy texture data into the atlas
+            byte[] imgData = texture.getData();
+            System.out.println(path);
+            System.out.println(Arrays.toString(imgData));
+            ByteBuffer buffer = ByteBuffer.allocateDirect(imgData.length);
+            buffer.put(imgData);
+            buffer.flip(); // Reset position to 0 before passing to OpenGL
+
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, texture.getWidth());
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, targetX);
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, targetY);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, targetX, targetY, texture.getWidth(), texture.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+            // Update index for the next texture
+//            index++;
+            totalX = totalX + targetX;
+        }
         glBindTexture(GL_TEXTURE_2D, 0);
         textureAtlas = new Texture(width, height, result);
     }
@@ -74,21 +71,5 @@ public class VoxelAtlas {
 
     public static Texture getTextureAtlas() {
         return textureAtlas;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public static Vector2f getAtlasSize() {
-        return atlasSize;
-    }
-
-    public static int getAtlasCount() {
-        return atlasCount;
     }
 }

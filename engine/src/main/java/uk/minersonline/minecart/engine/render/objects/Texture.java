@@ -14,10 +14,14 @@ public class Texture implements Destroyable {
 	private int textureId;
 	private byte[] data;
 	private final String texturePath;
+	private final int width;
+	private final int height;
 
 	public Texture(int width, int height, int textureId) {
 		this.texturePath = "";
 		this.textureId = textureId;
+		this.width = width;
+		this.height = height;
 	}
 
 	public Texture(String texturePath, boolean isResource) {
@@ -43,8 +47,8 @@ public class Texture implements Destroyable {
 				throw new RuntimeException("Image file [" + texturePath + "] not loaded: " + stbi_failure_reason());
 			}
 
-			int width = w.get();
-			int height = h.get();
+			this.width = w.get();
+			this.height = h.get();
 
 			generateTexture(width, height, buf);
 
@@ -83,5 +87,13 @@ public class Texture implements Destroyable {
 
 	public byte[] getData() {
 		return data;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 }

@@ -9,6 +9,7 @@ import imgui.type.ImBoolean;
 import uk.minersonline.minecart.engine.render.objects.Texture;
 import uk.minersonline.minecart.engine.scene.Scene;
 import uk.minersonline.minecart.engine.scene.components.AbstractComponent;
+import uk.minersonline.minecart.engine.scene.terrain.VoxelAtlas;
 
 import java.util.Map;
 
@@ -86,6 +87,9 @@ public class DebugGui implements GuiInstance {
                     ImGui.sameLine();
                     ImGui.text(texture.getTexturePath());
                 }
+                ImGui.text("Voxel Texture Atlas");
+                Texture texture = VoxelAtlas.getTextureAtlas();
+                ImGui.image(texture.getTextureId(), texture.getWidth(), texture.getHeight());
             }
             ImGui.end();
         }
