@@ -6,7 +6,7 @@ import uk.minersonline.minecart.engine.registry.Registry;
 
 public class VoxelType {
 	public static final VoxelType AIR = new VoxelType(VoxelTypeSettings.create());
-	public static final VoxelType FILLED = new VoxelType(VoxelTypeSettings.create().texture("minecart/assets/textures/cube.png"));
+	public static final VoxelType FILLED = new VoxelType(VoxelTypeSettings.create().texture("minecart/assets/textures/cube.png").collidable(true));
 
 	protected final VoxelTypeSettings settings;
 
@@ -16,6 +16,7 @@ public class VoxelType {
 
 	public static void init() {
 		Registry.register(Registries.VOXEL_TYPE, new Identifier("minecart", "air"), AIR);
+		Registry.register(Registries.VOXEL_TYPE, new Identifier("minecart", "filled"), FILLED);
 	}
 
 	public static class VoxelTypeSettings {
