@@ -5,7 +5,10 @@ import imgui.ImGuiIO;
 import org.joml.Vector2f;
 import uk.minersonline.minecart.engine.gui.GuiInstance;
 import uk.minersonline.minecart.engine.registry.Registries;
+import uk.minersonline.minecart.engine.render.objects.Texture;
+import uk.minersonline.minecart.engine.render.objects.TextureCache;
 import uk.minersonline.minecart.engine.scene.Scene;
+import uk.minersonline.minecart.engine.scene.terrain.VoxelAtlas;
 import uk.minersonline.minecart.engine.scene.terrain.VoxelType;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.window.Window;
@@ -35,8 +38,17 @@ public class Engine implements Destroyable {
 		scene = new Scene(properties.width, properties.height);
 		VoxelType.init();
 		application.init(window, scene, render);
-		Registries.VOXEL_TYPE.freeze();
+		voxelInit();
 		running = true;
+	}
+
+	private void voxelInit() {
+		Registries.VOXEL_TYPE.freeze();
+		for (VoxelType type : Registries.VOXEL_TYPE.getEntries().values()) {
+			Texture texture = scene.getCache().createTexture(type.getSettings().getTexture(), true);
+			VoxelAtlas.addTexture(texture);
+		}
+		VoxelAtlas.createTextureAtlas();
 	}
 
 	@Override

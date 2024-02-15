@@ -56,4 +56,25 @@ public class FileUtils {
 		}
 		return buffer;
 	}
+
+	public static byte[] readFileToByteArray(String filePath) {
+		byte[] buffer;
+		try {
+			buffer= Files.readAllBytes(Paths.get(filePath));
+		} catch (IOException excp) {
+			throw new RuntimeException("Error reading file [" + filePath + "]", excp);
+		}
+		return buffer;
+	}
+
+	public static byte[] readResourceToByteArray(String filePath) {
+		byte[] buffer;
+		try {
+			InputStream stream = FileUtils.class.getClassLoader().getResourceAsStream(filePath);
+			buffer = stream.readAllBytes();
+		} catch (IOException excp) {
+			throw new RuntimeException("Error reading file [" + filePath + "]", excp);
+		}
+		return buffer;
+	}
 }

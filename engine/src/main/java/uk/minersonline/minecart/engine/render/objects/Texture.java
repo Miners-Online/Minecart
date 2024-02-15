@@ -1,5 +1,6 @@
 package uk.minersonline.minecart.engine.render.objects;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryStack;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.utils.FileUtils;
@@ -11,11 +12,12 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture implements Destroyable {
 	private int textureId;
+	private byte[] data;
 	private final String texturePath;
 
-	public Texture(int width, int height, ByteBuffer buf) {
+	public Texture(int width, int height, int textureId) {
 		this.texturePath = "";
-		generateTexture(width, height, buf);
+		this.textureId = textureId;
 	}
 
 	public Texture(String texturePath, boolean isResource) {
@@ -25,12 +27,17 @@ public class Texture implements Destroyable {
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer channels = stack.mallocInt(1);
 
-			ByteBuffer img;
+			byte[] data;
 			if (isResource) {
-				img = FileUtils.readResourceToBuffer(texturePath);
+				data = FileUtils.readResourceToByteArray(texturePath);
 			} else {
-				img = FileUtils.readFileToBuffer(texturePath);
+				data = FileUtils.readFileToByteArray(texturePath);
 			}
+			this.data = data;
+
+			ByteBuffer img = BufferUtils.createByteBuffer(data.length);
+			img.put(data);
+			img.flip();
 			ByteBuffer buf = stbi_load_from_memory(img, w, h, channels, 4);
 			if (buf == null) {
 				throw new RuntimeException("Image file [" + texturePath + "] not loaded: " + stbi_failure_reason());
@@ -72,5 +79,9 @@ public class Texture implements Destroyable {
 
 	public int getTextureId() {
 		return textureId;
+	}
+
+	public byte[] getData() {
+		return data;
 	}
 }

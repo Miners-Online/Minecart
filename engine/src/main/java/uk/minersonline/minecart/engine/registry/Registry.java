@@ -1,5 +1,6 @@
 package uk.minersonline.minecart.engine.registry;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,10 @@ public class Registry<V> {
 
 	public boolean isFrozen() {
 		return frozen;
+	}
+
+	public Map<Identifier, V> getEntries() {
+		return Collections.unmodifiableMap(registryMap);
 	}
 }
 

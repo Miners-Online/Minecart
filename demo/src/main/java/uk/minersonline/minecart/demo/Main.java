@@ -55,6 +55,7 @@ public class Main implements Application, GuiInstance {
 		window.setClearColor(Color.CYAN);
 		window.center();
 		this.window = window;
+		ExampleVoxels.init();
 
 		float[] positions = new float[]{
 				// V0

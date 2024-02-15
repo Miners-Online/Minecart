@@ -11,7 +11,7 @@ public class ExampleWorldGenerator extends AbstractTerrainGenerator {
 		} else if (z > 12) {
 			return VoxelType.AIR;
 		} else {
-			return VoxelType.FILLED;
+			return ExampleVoxels.BLACK_CUBE;
 		}
 	}
 }
