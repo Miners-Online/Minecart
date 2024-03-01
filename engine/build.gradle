@@ -72,7 +72,32 @@ test {
     useJUnitPlatform()
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+jar {
+    enabled = true
+}
+
 publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = "Minecart"
+            version = version
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
