@@ -85,7 +85,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = "Minecart"
+            artifactId = "minecart_engine"
             version = version
             from components.java
             versionMapping {
