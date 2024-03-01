@@ -4,6 +4,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryStack;
 import uk.minersonline.minecart.engine.utils.Destroyable;
 import uk.minersonline.minecart.engine.utils.FileUtils;
+import uk.minersonline.minecart.engine.utils.ListUtils;
 
 import java.nio.*;
 
@@ -12,7 +13,7 @@ import static org.lwjgl.stb.STBImage.*;
 
 public class Texture implements Destroyable {
 	private int textureId;
-	private byte[] data;
+	private ByteBuffer data;
 	private final String texturePath;
 	private final int width;
 	private final int height;
@@ -37,7 +38,6 @@ public class Texture implements Destroyable {
 			} else {
 				data = FileUtils.readFileToByteArray(texturePath);
 			}
-			this.data = data;
 
 			ByteBuffer img = BufferUtils.createByteBuffer(data.length);
 			img.put(data);
@@ -47,6 +47,7 @@ public class Texture implements Destroyable {
 				throw new RuntimeException("Image file [" + texturePath + "] not loaded: " + stbi_failure_reason());
 			}
 
+			this.data = ListUtils.cloneByteBuffer(buf);
 			this.width = w.get();
 			this.height = h.get();
 
@@ -85,7 +86,7 @@ public class Texture implements Destroyable {
 		return textureId;
 	}
 
-	public byte[] getData() {
+	public ByteBuffer getData() {
 		return data;
 	}
 

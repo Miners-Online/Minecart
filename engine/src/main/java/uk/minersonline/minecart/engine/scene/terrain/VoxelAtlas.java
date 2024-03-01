@@ -30,11 +30,6 @@ public class VoxelAtlas {
         int result = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, result);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-//        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 //        int index = 0;
         int totalX = 0;
@@ -43,20 +38,21 @@ public class VoxelAtlas {
 
             // Calculate position within the atlas
             int targetX = totalX + texture.getWidth();
-            int targetY = 16; // Assuming all textures are aligned at the top
+            int targetY = texture.getHeight();
 
             // Copy texture data into the atlas
-            byte[] imgData = texture.getData();
+            ByteBuffer imgData = texture.getData();
+            imgData.flip();
             System.out.println(path);
-            System.out.println(Arrays.toString(imgData));
-            ByteBuffer buffer = ByteBuffer.allocateDirect(imgData.length);
-            buffer.put(imgData);
-            buffer.flip(); // Reset position to 0 before passing to OpenGL
+//            System.out.println(Arrays.toString(imgData));
+//            ByteBuffer buffer = ByteBuffer.allocateDirect(imgData.length);
+//            buffer.put(imgData);
+//            buffer.flip(); // Reset position to 0 before passing to OpenGL
 
-            glPixelStorei(GL_UNPACK_ROW_LENGTH, texture.getWidth());
-            glPixelStorei(GL_UNPACK_SKIP_PIXELS, targetX);
-            glPixelStorei(GL_UNPACK_SKIP_ROWS, targetY);
-            glTexSubImage2D(GL_TEXTURE_2D, 0, targetX, targetY, texture.getWidth(), texture.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+//            glPixelStorei(GL_UNPACK_ROW_LENGTH, texture.getWidth());
+//            glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+//            glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, targetX, targetY, texture.getWidth(), texture.getHeight(), GL_RGBA, GL_UNSIGNED_BYTE, imgData);
             // Update index for the next texture
 //            index++;
             totalX = totalX + targetX;
